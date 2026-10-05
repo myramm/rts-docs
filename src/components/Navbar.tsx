@@ -1,28 +1,52 @@
 import React from 'react';
-import { Search, Github, Terminal, BookOpen, Cpu, Settings } from 'lucide-react';
+import { Search, Github, Menu, X } from 'lucide-react';
 
 interface NavbarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
   onOpenSearch: () => void;
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ activeTab, setActiveTab, onOpenSearch }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  activeTab,
+  setActiveTab,
+  onOpenSearch,
+  mobileMenuOpen,
+  setMobileMenuOpen
+}) => {
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md">
+    <header className="sticky top-0 z-40 w-full border-b border-zinc-800 bg-zinc-950/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
         
-        {/* Logo */}
-        <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('docs')}>
-          <span className="font-semibold text-sm tracking-tight text-white flex items-center space-x-2">
-            <span>r.outers</span>
-            <span className="text-[11px] font-mono px-1.5 py-0.5 rounded bg-zinc-800 text-zinc-300">
-              v2.4.0
+        {/* Left: Mobile Hamburger & Logo */}
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden p-1.5 -ml-1 text-zinc-400 hover:text-white rounded-md hover:bg-zinc-900 transition-colors"
+            aria-label="Toggle Navigation Menu"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5 text-white" />}
+          </button>
+
+          <div
+            className="flex items-center space-x-2 cursor-pointer"
+            onClick={() => {
+              setActiveTab('docs');
+              setMobileMenuOpen(false);
+            }}
+          >
+            <span className="font-bold text-sm tracking-tight text-white flex items-center space-x-1.5">
+              <span>r.outers</span>
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300">
+                v2.4.0
+              </span>
             </span>
-          </span>
+          </div>
         </div>
 
-        {/* Center Nav */}
+        {/* Center: Desktop Nav */}
         <nav className="hidden md:flex items-center space-x-1 text-xs">
           <button
             onClick={() => setActiveTab('docs')}

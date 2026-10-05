@@ -10,6 +10,7 @@ export function App() {
   const [activeTab, setActiveTab] = useState<'docs' | 'simulator' | 'models'>('docs');
   const [activeSection, setActiveSection] = useState('introduction');
   const [searchOpen, setSearchOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -29,6 +30,7 @@ export function App() {
       setActiveTab('docs');
     }
     setActiveSection(sectionId);
+    setMobileMenuOpen(false);
   };
 
   return (
@@ -37,6 +39,8 @@ export function App() {
         activeTab={activeTab}
         setActiveTab={(t) => setActiveTab(t as any)}
         onOpenSearch={() => setSearchOpen(true)}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
       />
 
       <SearchModal
@@ -46,26 +50,30 @@ export function App() {
       />
 
       <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 flex">
+        {/* Sidebar always rendered so mobile drawer works on any view */}
+        <Sidebar
+          activeSection={activeSection}
+          setActiveSection={setActiveSection}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+          activeTab={activeTab}
+          setActiveTab={(t) => setActiveTab(t as any)}
+        />
+
         {activeTab === 'docs' && (
-          <>
-            <Sidebar
-              activeSection={activeSection}
-              setActiveSection={setActiveSection}
-            />
-            <main className="flex-1 md:pl-8 py-2 overflow-y-auto">
-              <DocContent activeSection={activeSection} />
-            </main>
-          </>
+          <main className="flex-1 md:pl-8 py-2 overflow-y-auto">
+            <DocContent activeSection={activeSection} />
+          </main>
         )}
 
         {activeTab === 'simulator' && (
-          <main className="flex-1 py-4 w-full">
+          <main className="flex-1 md:pl-8 py-4 w-full">
             <TerminalSimulator />
           </main>
         )}
 
         {activeTab === 'models' && (
-          <main className="flex-1 py-4 w-full">
+          <main className="flex-1 md:pl-8 py-4 w-full">
             <ModelExplorer />
           </main>
         )}

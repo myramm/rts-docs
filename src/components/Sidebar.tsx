@@ -3,9 +3,20 @@ import React from 'react';
 interface SidebarProps {
   activeSection: string;
   setActiveSection: (id: string) => void;
+  mobileMenuOpen: boolean;
+  setMobileMenuOpen: (open: boolean) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSection }) => {
+export const Sidebar: React.FC<SidebarProps> = ({
+  activeSection,
+  setActiveSection,
+  mobileMenuOpen,
+  setMobileMenuOpen,
+  activeTab,
+  setActiveTab
+}) => {
   const sections = [
     {
       group: 'Overview',
@@ -35,34 +46,98 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeSection, setActiveSectio
   ];
 
   return (
-    <aside className="w-56 shrink-0 py-6 pr-6 border-r border-zinc-800 hidden md:block">
-      <div className="space-y-6 text-xs sticky top-20">
-        {sections.map((sec, sIdx) => (
-          <div key={sIdx} className="space-y-2">
-            <span className="font-semibold text-zinc-400 uppercase tracking-wider text-[11px] block">
-              {sec.group}
+    <>
+      {/* Mobile Drawer Backdrop */}
+      {mobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-black/80 backdrop-blur-sm md:hidden animate-in fade-in duration-200"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Sidebar Panel (Desktop Sticky + Mobile Off-Canvas Drawer) */}
+      <aside
+        className={`fixed md:sticky top-14 left-0 z-40 w-72 md:w-56 shrink-0 h-[calc(100vh-3.5rem)] overflow-y-auto bg-zinc-950 md:bg-transparent p-5 md:py-6 md:px-0 md:pr-6 border-r border-zinc-800 transition-transform duration-200 ease-in-out ${
+          mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
+        }`}
+      >
+        <div className="space-y-6 text-xs">
+          
+          {/* Mobile Tab Switcher inside Drawer */}
+          <div className="md:hidden space-y-1.5 pb-4 border-b border-zinc-800">
+            <span className="font-semibold text-zinc-500 uppercase tracking-wider text-[10px] block">
+              Pages
             </span>
-            <div className="space-y-0.5">
-              {sec.items.map(item => {
-                const isActive = activeSection === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full text-left px-2.5 py-1.5 rounded-md transition-colors ${
-                      isActive
-                        ? 'bg-zinc-800 text-white font-medium'
-                        : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
+            <div className="grid grid-cols-3 gap-1">
+              <button
+                onClick={() => {
+                  setActiveTab('docs');
+                  setMobileMenuOpen(false);
+                }}
+                className={`px-2 py-1.5 rounded text-center text-xs font-medium ${
+                  activeTab === 'docs' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white bg-zinc-900/60'
+                }`}
+              >
+                Docs
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('simulator');
+                  setMobileMenuOpen(false);
+                }}
+                className={`px-2 py-1.5 rounded text-center text-xs font-medium ${
+                  activeTab === 'simulator' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white bg-zinc-900/60'
+                }`}
+              >
+                CLI
+              </button>
+              <button
+                onClick={() => {
+                  setActiveTab('models');
+                  setMobileMenuOpen(false);
+                }}
+                className={`px-2 py-1.5 rounded text-center text-xs font-medium ${
+                  activeTab === 'models' ? 'bg-zinc-800 text-white' : 'text-zinc-400 hover:text-white bg-zinc-900/60'
+                }`}
+              >
+                Models
+              </button>
             </div>
           </div>
-        ))}
-      </div>
-    </aside>
+
+          {/* Doc Sections Hierarchy */}
+          {sections.map((sec, sIdx) => (
+            <div key={sIdx} className="space-y-1.5">
+              <span className="font-semibold text-zinc-500 uppercase tracking-wider text-[11px] block">
+                {sec.group}
+              </span>
+              <div className="space-y-0.5">
+                {sec.items.map(item => {
+                  const isActive = activeSection === item.id && activeTab === 'docs';
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActiveTab('docs');
+                        setActiveSection(item.id);
+                        setMobileMenuOpen(false);
+                      }}
+                      className={`w-full text-left px-2.5 py-1.5 rounded-md transition-colors ${
+                        isActive
+                          ? 'bg-zinc-800 text-white font-semibold'
+                          : 'text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900/60'
+                      }`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+
+        </div>
+      </aside>
+    </>
   );
 };
