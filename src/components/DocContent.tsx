@@ -450,36 +450,21 @@ rts`}
 
           {/* Prompt Styles Showcase */}
           <div className="space-y-3">
-            <h2 className="text-base font-semibold text-white">1. Pilihan Format Prompt</h2>
+            <h2 className="text-base font-semibold text-white">1. Format Prompt Terminal</h2>
             <div className="grid grid-cols-1 gap-3">
               
-              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
-                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Agy Double-Line (Default Modern)</div>
-                <div className="text-cyan-400 font-semibold">╭─ <span className="text-yellow-400">⚡</span> [rts:nemotron-3-super] · Termux · Auto</div>
-                <div className="text-pink-400 font-semibold">╰─❯ <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
-              </div>
-
-              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
-                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Cyber Box (Neon Terminal)</div>
-                <div className="text-purple-400 font-semibold">┌── 🚀 [rts // nemotron] ── [Auto]</div>
-                <div className="text-yellow-400 font-semibold">└── ❯ <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
-              </div>
-
-              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
-                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Powerline Segments</div>
-                <div className="text-purple-400 font-semibold">▰▰ <span className="text-cyan-400">rts</span> ▰ <span className="text-purple-300">nemotron</span> ▰ <span className="text-emerald-400">Auto</span> ▰</div>
-                <div className="text-cyan-400 font-semibold">❯ <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
-              </div>
-
-              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
-                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Minimal Compact (Single-Line)</div>
-                <div className="text-cyan-400 font-semibold">rts<span className="text-zinc-500">(nemotron)</span> ❯ <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
-              </div>
-
-              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
-                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Classic r.outers</div>
-                <div className="text-cyan-400 font-semibold">r.outers &gt; <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
-                <div className="text-zinc-500 text-[11px]">⚡ Nemotron 3 Super 120B · Auto · Ready</div>
+              <div className="p-4 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1.5">
+                <div className="text-zinc-400 text-[11px] font-sans font-semibold mb-1">Boxed Divider Layout (Clean & Responsive)</div>
+                <div className="text-zinc-600 select-none">─────────────────────────────────────────────────────</div>
+                <div className="text-white font-medium pl-1">buatkan REST API anime</div>
+                <div className="text-zinc-600 select-none">─────────────────────────────────────────────────────</div>
+                <div className="text-zinc-400 text-[11px] pt-1 flex items-center space-x-2">
+                  <span className="text-cyan-400">clouvia:free-model</span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-emerald-400">Auto</span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-emerald-400 font-semibold">Ready</span>
+                </div>
               </div>
 
             </div>

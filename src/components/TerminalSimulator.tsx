@@ -261,15 +261,16 @@ Type /theme, /style, /help, or enter prompt to test.`
         {messages.map(msg => (
           <div key={msg.id} className="space-y-0.5">
             {msg.type === 'input' ? (
-              <div className="space-y-0.5">
-                {msg.topLine && (
-                  <div className={`${colors.primary} font-medium`}>{msg.topLine}</div>
-                )}
-                <div className="text-zinc-100 flex items-start space-x-1.5">
-                  <span className={`${colors.secondary} font-bold`}>
-                    {msg.style === 'agy' ? '╰─❯' : msg.style === 'cyber' ? '└── ❯' : msg.style === 'minimal' ? '❯' : 'r.outers >'}
-                  </span>
-                  <span>{msg.content}</span>
+              <div className="space-y-1 font-mono text-xs my-1">
+                <div className="text-zinc-700 select-none">────────────────────────────────────────</div>
+                <div className="text-white font-medium pl-1">{msg.content}</div>
+                <div className="text-zinc-700 select-none">────────────────────────────────────────</div>
+                <div className="text-zinc-400 text-[11px] flex items-center space-x-1.5 pl-1 pb-1">
+                  <span className={colors.primary}>clouvia:{shortMod}</span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-emerald-400">Auto</span>
+                  <span className="text-zinc-600">•</span>
+                  <span className="text-emerald-400 font-semibold">Ready</span>
                 </div>
               </div>
             ) : msg.isColorSchemeModal ? (
@@ -292,48 +293,10 @@ Type /theme, /style, /help, or enter prompt to test.`
         <div ref={terminalEndRef} />
       </div>
 
-      {/* Input Area Dynamic Render */}
-      <div className="p-3 border-t border-zinc-800 bg-zinc-950/90 space-y-2">
-        
-        {/* Top line if Agy / Cyber / Powerline */}
-        {promptStyle === 'agy' && (
-          <div className={`text-xs ${colors.primary} font-medium`}>
-            ╭─ <span className="text-yellow-400">⚡</span> [rts:{shortMod}] <span className="text-zinc-500">·</span> <span className={colors.accent}>Termux</span> <span className="text-zinc-500">·</span> <span className="text-emerald-400">Auto</span>
-          </div>
-        )}
-
-        {promptStyle === 'cyber' && (
-          <div className={`text-xs ${colors.primary} font-medium`}>
-            ┌── 🚀 [{colors.secondary}rts <span className="text-zinc-600">//</span> {shortMod}] ── [<span className="text-emerald-400">Auto</span>]
-          </div>
-        )}
-
-        {promptStyle === 'powerline' && (
-          <div className={`text-xs ${colors.secondary} font-medium`}>
-            ▰▰ <span className={colors.primary}>rts</span> ▰ <span>{shortMod}</span> ▰ <span className="text-emerald-400">Auto</span> ▰
-          </div>
-        )}
-
-        {/* Input prompt line */}
-        <div className="flex items-center space-x-2">
-          {promptStyle === 'agy' && (
-            <span className={`${colors.secondary} font-bold`}>╰─❯</span>
-          )}
-          {promptStyle === 'cyber' && (
-            <span className={`${colors.secondary} font-bold`}>└── ❯</span>
-          )}
-          {promptStyle === 'powerline' && (
-            <span className={`${colors.primary} font-bold`}>❯</span>
-          )}
-          {promptStyle === 'minimal' && (
-            <span className={`${colors.primary} font-bold`}>
-              rts<span className="text-zinc-500">({shortMod})</span> ❯
-            </span>
-          )}
-          {promptStyle === 'classic' && (
-            <span className={`${colors.primary} font-bold`}>r.outers &gt;</span>
-          )}
-
+      {/* Input Area Boxed Divider Render */}
+      <div className="p-3 border-t border-zinc-800 bg-zinc-950/90 font-mono text-xs space-y-1.5">
+        <div className="text-zinc-700 select-none">────────────────────────────────────────</div>
+        <div className="flex items-center space-x-2 pl-1">
           <input
             ref={inputRef}
             type="text"
@@ -341,7 +304,7 @@ Type /theme, /style, /help, or enter prompt to test.`
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isProcessing}
-            placeholder="Ketik /theme untuk Color Scheme selector, atau prompt apa saja..."
+            placeholder="Ketik prompt atau /theme untuk Color Scheme..."
             className="flex-1 bg-transparent text-zinc-100 placeholder-zinc-600 focus:outline-none text-xs"
             autoFocus
           />
@@ -354,13 +317,14 @@ Type /theme, /style, /help, or enter prompt to test.`
             <Send className="w-3.5 h-3.5" />
           </button>
         </div>
-
-        {promptStyle === 'classic' && (
-          <div className="flex items-center justify-between text-[11px] text-zinc-500 pt-1 border-t border-zinc-900">
-            <span>⚡ {shortMod} · Auto · Ready</span>
-            <span className="hidden sm:inline">UP/DOWN history</span>
-          </div>
-        )}
+        <div className="text-zinc-700 select-none">────────────────────────────────────────</div>
+        <div className="text-zinc-400 text-[11px] flex items-center space-x-1.5 pl-1 pt-0.5">
+          <span className={colors.primary}>clouvia:{shortMod}</span>
+          <span className="text-zinc-600">•</span>
+          <span className="text-emerald-400">Auto</span>
+          <span className="text-zinc-600">•</span>
+          <span className="text-emerald-400 font-semibold">Ready</span>
+        </div>
       </div>
 
     </div>
