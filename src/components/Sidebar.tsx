@@ -28,8 +28,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ]
     },
     {
-      group: 'Architecture',
+      group: 'Architecture & UI',
       items: [
+        { id: 'terminal-styles', label: 'Terminal Styles (Agy)' },
         { id: 'double-line', label: 'Double-Line Prompt' },
         { id: 'history', label: 'Arrow History Cycling' },
         { id: 'tool-execution', label: 'Autonomous Tools & Shell' }

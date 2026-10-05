@@ -437,6 +437,99 @@ rts`}
         </section>
       )}
 
+      {/* TERMINAL STYLES (AGY STYLE) */}
+      {activeSection === 'terminal-styles' && (
+        <section className="space-y-6">
+          <div className="space-y-2">
+            <span className="text-xs font-mono text-zinc-400 uppercase font-semibold">UI & Customization</span>
+            <h1 className="text-2xl font-bold text-white tracking-tight">Terminal Styles & Themes (Agy Style)</h1>
+            <p className="text-zinc-400">
+              Kustomisasi tampilan prompt dan palette warna terminal ala <b>Antigravity (AGY)</b> untuk pengalaman vibe coding yang lebih estetik dan nyaman di layar smartphone / Termux.
+            </p>
+          </div>
+
+          {/* Prompt Styles Showcase */}
+          <div className="space-y-3">
+            <h2 className="text-base font-semibold text-white">1. Pilihan Format Prompt</h2>
+            <div className="grid grid-cols-1 gap-3">
+              
+              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
+                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Agy Double-Line (Default Modern)</div>
+                <div className="text-cyan-400 font-semibold">╭─ <span className="text-yellow-400">⚡</span> [rts:nemotron-3-super] · Termux · Auto</div>
+                <div className="text-pink-400 font-semibold">╰─❯ <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
+              </div>
+
+              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
+                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Cyber Box (Neon Terminal)</div>
+                <div className="text-purple-400 font-semibold">┌── 🚀 [rts // nemotron] ── [Auto]</div>
+                <div className="text-yellow-400 font-semibold">└── ❯ <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
+              </div>
+
+              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
+                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Powerline Segments</div>
+                <div className="text-purple-400 font-semibold">▰▰ <span className="text-cyan-400">rts</span> ▰ <span className="text-purple-300">nemotron</span> ▰ <span className="text-emerald-400">Auto</span> ▰</div>
+                <div className="text-cyan-400 font-semibold">❯ <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
+              </div>
+
+              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
+                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Minimal Compact (Single-Line)</div>
+                <div className="text-cyan-400 font-semibold">rts<span className="text-zinc-500">(nemotron)</span> ❯ <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
+              </div>
+
+              <div className="p-3.5 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-xs space-y-1">
+                <div className="text-zinc-400 text-[11px] font-sans font-semibold">Classic r.outers</div>
+                <div className="text-cyan-400 font-semibold">r.outers &gt; <span className="text-zinc-300 font-normal">buatkan REST API anime</span></div>
+                <div className="text-zinc-500 text-[11px]">⚡ Nemotron 3 Super 120B · Auto · Ready</div>
+              </div>
+
+            </div>
+          </div>
+
+          {/* Color Themes Showcase */}
+          <div className="space-y-3 pt-2">
+            <h2 className="text-base font-semibold text-white">2. Color Palettes (Tema Warna)</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+              <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
+                <span className="text-cyan-400">Tokyo Night</span>
+                <span className="text-zinc-500">Cyan & Purple</span>
+              </div>
+              <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
+                <span className="text-pink-400">Cyberpunk Neon</span>
+                <span className="text-zinc-500">Pink & Yellow</span>
+              </div>
+              <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
+                <span className="text-emerald-400">Matrix Green</span>
+                <span className="text-zinc-500">Phosphor Mint</span>
+              </div>
+              <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
+                <span className="text-amber-400">Monokai Pro</span>
+                <span className="text-zinc-500">Yellow & Green</span>
+              </div>
+              <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
+                <span className="text-purple-400">Dracula</span>
+                <span className="text-zinc-500">Purple & Coral</span>
+              </div>
+              <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
+                <span className="text-blue-400">Nord Arctic</span>
+                <span className="text-zinc-500">Frost & Slate</span>
+              </div>
+            </div>
+          </div>
+
+          {/* How to Change */}
+          <div className="space-y-2 pt-2">
+            <h2 className="text-base font-semibold text-white">3. Cara Mengubah Style & Tema</h2>
+            <p className="text-zinc-400 text-xs">
+              Ketik perintah <code className="text-zinc-200">/style</code> atau <code className="text-zinc-200">/theme</code> di CLI untuk membuka wizard interaktif dengan live preview:
+            </p>
+            <CodeBlock
+              language="bash"
+              code="rts > /style"
+            />
+          </div>
+        </section>
+      )}
+
       {/* DOUBLE-LINE PROMPT */}
       {activeSection === 'double-line' && (
         <section className="space-y-4">
@@ -568,6 +661,11 @@ rts`}
                   <td className="p-2.5 font-bold text-white">/setup</td>
                   <td className="p-2.5 text-zinc-400">/setup</td>
                   <td className="p-2.5 font-sans">Wizard pengaturan API Key</td>
+                </tr>
+                <tr>
+                  <td className="p-2.5 font-bold text-white">/style</td>
+                  <td className="p-2.5 text-zinc-400">/style [or /theme]</td>
+                  <td className="p-2.5 font-sans">Ubah style terminal prompt & palette warna (Agy style)</td>
                 </tr>
                 <tr>
                   <td className="p-2.5 font-bold text-white">/model</td>
