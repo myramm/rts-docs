@@ -42,6 +42,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
         { id: 'skills-guide', label: 'Anti-Slop & Skills' },
         { id: 'commands-ref', label: 'Slash Commands' }
       ]
+    },
+    {
+      group: 'Developers & API',
+      items: [
+        { id: 'endpoints', label: 'REST API Endpoints' }
+      ]
     }
   ];
 
@@ -55,7 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         />
       )}
 
-      {/* Sidebar Panel (Desktop Sticky + Mobile Off-Canvas Drawer) */}
+      {/* Sidebar Panel */}
       <aside
         className={`fixed md:sticky top-14 left-0 z-40 w-72 md:w-56 shrink-0 h-[calc(100vh-3.5rem)] overflow-y-auto bg-zinc-950 md:bg-transparent p-5 md:py-6 md:px-0 md:pr-6 border-r border-zinc-800 transition-transform duration-200 ease-in-out ${
           mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
@@ -63,10 +69,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       >
         <div className="space-y-6 text-xs">
           
-          {/* Mobile Tab Switcher inside Drawer */}
+          {/* Mobile Tab Switcher */}
           <div className="md:hidden space-y-1.5 pb-4 border-b border-zinc-800">
             <span className="font-semibold text-zinc-500 uppercase tracking-wider text-[10px] block">
-              Pages
+              Navigation
             </span>
             <div className="grid grid-cols-3 gap-1">
               <button

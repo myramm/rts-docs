@@ -1,12 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { CodeBlock } from './CodeBlock';
-import { Github, Heart, Terminal, Sparkles, Zap, Shield, Cpu, User } from 'lucide-react';
+import { Github, Terminal, User, Play, Check, Server, Activity, Clock } from 'lucide-react';
 
 interface DocContentProps {
   activeSection: string;
 }
 
 export const DocContent: React.FC<DocContentProps> = ({ activeSection }) => {
+  const [testingEndpoint, setTestingEndpoint] = useState<string | null>(null);
+  const [testResponse, setTestResponse] = useState<{ [key: string]: any }>({});
+  const [testTime, setTestTime] = useState<{ [key: string]: number }>({});
+
+  const handleTestApi = async (path: string, method: string = 'GET', body?: any) => {
+    setTestingEndpoint(path);
+    const start = performance.now();
+    try {
+      const res = await fetch(path, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined
+      });
+      const data = await res.json();
+      const end = performance.now();
+      setTestTime(prev => ({ ...prev, [path]: Math.round(end - start) }));
+      setTestResponse(prev => ({ ...prev, [path]: data }));
+    } catch (err: any) {
+      setTestResponse(prev => ({ ...prev, [path]: { error: 'Failed to fetch API' } }));
+    } finally {
+      setTestingEndpoint(null);
+    }
+  };
+
   return (
     <article className="max-w-3xl space-y-10 py-6 text-zinc-300 text-sm leading-relaxed">
 
@@ -120,6 +144,202 @@ r.outers > buatkan REST API anime        # AI langsung menulis kode & eksekusi s
             </div>
           </div>
 
+        </section>
+      )}
+
+      {/* REST API ENDPOINTS SECTION */}
+      {activeSection === 'endpoints' && (
+        <section className="space-y-8">
+          <div className="space-y-2">
+            <span className="text-xs font-mono text-zinc-400 uppercase font-semibold">API Reference</span>
+            <h1 className="text-2xl font-bold text-white tracking-tight">REST API Endpoints</h1>
+            <p className="text-zinc-400">
+              Dokumentasi endpoint serverless resmi untuk integrasi programatik, status agen, katalog model, dan eksekusi AI.
+            </p>
+          </div>
+
+          <div className="p-3 rounded-lg border border-zinc-800 bg-zinc-900/50 font-mono text-xs text-zinc-300">
+            <span className="text-zinc-500">BASE URL: </span>
+            <span className="text-emerald-400">https://rts-docs-sigma.vercel.app</span>
+          </div>
+
+          {/* ENDPOINT 1: /api/status */}
+          <div className="space-y-3 p-4 rounded-xl border border-zinc-800 bg-zinc-950">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center space-x-2 font-mono text-xs">
+                <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800/60 font-bold">
+                  GET
+                </span>
+                <span className="text-white font-semibold">/api/status</span>
+              </div>
+
+              <button
+                onClick={() => handleTestApi('/api/status')}
+                disabled={testingEndpoint === '/api/status'}
+                className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-sans flex items-center space-x-1.5 transition-colors w-fit"
+              >
+                <Play className="w-3 h-3 fill-white" />
+                <span>{testingEndpoint === '/api/status' ? 'Fetching...' : 'Test Endpoint'}</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-400">
+              Mengembalikan status kesehatan sistem, versi agen, provider aktif, dan default model.
+            </p>
+
+            <CodeBlock
+              language="bash"
+              filename="cURL"
+              code="curl -s https://rts-docs-sigma.vercel.app/api/status"
+            />
+
+            {testResponse['/api/status'] && (
+              <div className="space-y-1 pt-1">
+                <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+                  <span>Live Response</span>
+                  <span>{testTime['/api/status']} ms</span>
+                </div>
+                <CodeBlock
+                  language="json"
+                  code={JSON.stringify(testResponse['/api/status'], null, 2)}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* ENDPOINT 2: /api/models */}
+          <div className="space-y-3 p-4 rounded-xl border border-zinc-800 bg-zinc-950">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center space-x-2 font-mono text-xs">
+                <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800/60 font-bold">
+                  GET
+                </span>
+                <span className="text-white font-semibold">/api/models</span>
+              </div>
+
+              <button
+                onClick={() => handleTestApi('/api/models')}
+                disabled={testingEndpoint === '/api/models'}
+                className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-sans flex items-center space-x-1.5 transition-colors w-fit"
+              >
+                <Play className="w-3 h-3 fill-white" />
+                <span>{testingEndpoint === '/api/models' ? 'Fetching...' : 'Test Endpoint'}</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-400">
+              Mengembalikan seluruh daftar 80+ model NVIDIA NIM, context window, tag reasoning, dan latency.
+            </p>
+
+            <CodeBlock
+              language="bash"
+              filename="cURL"
+              code="curl -s https://rts-docs-sigma.vercel.app/api/models"
+            />
+
+            {testResponse['/api/models'] && (
+              <div className="space-y-1 pt-1">
+                <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+                  <span>Live Response</span>
+                  <span>{testTime['/api/models']} ms</span>
+                </div>
+                <CodeBlock
+                  language="json"
+                  code={JSON.stringify(testResponse['/api/models'], null, 2)}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* ENDPOINT 3: /api/skills */}
+          <div className="space-y-3 p-4 rounded-xl border border-zinc-800 bg-zinc-950">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center space-x-2 font-mono text-xs">
+                <span className="px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800/60 font-bold">
+                  GET
+                </span>
+                <span className="text-white font-semibold">/api/skills</span>
+              </div>
+
+              <button
+                onClick={() => handleTestApi('/api/skills')}
+                disabled={testingEndpoint === '/api/skills'}
+                className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-sans flex items-center space-x-1.5 transition-colors w-fit"
+              >
+                <Play className="w-3 h-3 fill-white" />
+                <span>{testingEndpoint === '/api/skills' ? 'Fetching...' : 'Test Endpoint'}</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-400">
+              Mengembalikan daftar modul skill aktif (Anti-Slop, Systematic Debugging, APKTool).
+            </p>
+
+            <CodeBlock
+              language="bash"
+              filename="cURL"
+              code="curl -s https://rts-docs-sigma.vercel.app/api/skills"
+            />
+
+            {testResponse['/api/skills'] && (
+              <div className="space-y-1 pt-1">
+                <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+                  <span>Live Response</span>
+                  <span>{testTime['/api/skills']} ms</span>
+                </div>
+                <CodeBlock
+                  language="json"
+                  code={JSON.stringify(testResponse['/api/skills'], null, 2)}
+                />
+              </div>
+            )}
+          </div>
+
+          {/* ENDPOINT 4: /api/terminal/execute */}
+          <div className="space-y-3 p-4 rounded-xl border border-zinc-800 bg-zinc-950">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center space-x-2 font-mono text-xs">
+                <span className="px-2 py-0.5 rounded bg-blue-950 text-blue-400 border border-blue-800/60 font-bold">
+                  POST
+                </span>
+                <span className="text-white font-semibold">/api/terminal/execute</span>
+              </div>
+
+              <button
+                onClick={() => handleTestApi('/api/terminal/execute', 'POST', { input: '/skills' })}
+                disabled={testingEndpoint === '/api/terminal/execute'}
+                className="px-2.5 py-1 rounded bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-sans flex items-center space-x-1.5 transition-colors w-fit"
+              >
+                <Play className="w-3 h-3 fill-white" />
+                <span>{testingEndpoint === '/api/terminal/execute' ? 'Executing...' : 'Test Execution'}</span>
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-400">
+              Menjalankan simulasi prompt, perintah slash, atau instruksi coding agen secara programatik.
+            </p>
+
+            <CodeBlock
+              language="bash"
+              filename="cURL (POST)"
+              code={`curl -X POST https://rts-docs-sigma.vercel.app/api/terminal/execute \\
+  -H "Content-Type: application/json" \\
+  -d '{"input": "/skills", "currentModel": "nvidia/nemotron-3-super-120b-a12b"}'`}
+            />
+
+            {testResponse['/api/terminal/execute'] && (
+              <div className="space-y-1 pt-1">
+                <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+                  <span>Live Response</span>
+                  <span>{testTime['/api/terminal/execute']} ms</span>
+                </div>
+                <CodeBlock
+                  language="json"
+                  code={JSON.stringify(testResponse['/api/terminal/execute'], null, 2)}
+                />
+              </div>
+            )}
+          </div>
         </section>
       )}
 
