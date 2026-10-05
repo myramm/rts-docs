@@ -9,8 +9,8 @@ app.use(express.json());
 app.get('/api/status', (req, res) => {
   res.json({
     name: 'r.outers (rts)',
-    version: '2.4.0',
-    description: 'Autonomous AI Coding Agent for Android Termux & Linux',
+    version: '1.0.0',
+    description: 'Fast Mobile & Terminal Vibe Coding Tool (Termux & Linux Ready)',
     status: 'ONLINE',
     author: 'myramm (ラム)',
     muse: 'Akari Watanabe 🌸',

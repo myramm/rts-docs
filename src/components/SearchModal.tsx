@@ -140,7 +140,7 @@ export const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSel
             <span><kbd className="px-1.5 py-0.5 rounded bg-cyber-card border border-cyber-border">Enter</kbd> Select</span>
             <span><kbd className="px-1.5 py-0.5 rounded bg-cyber-card border border-cyber-border">Esc</kbd> Close</span>
           </div>
-          <span className="text-cyber-pink">r.outers v2.4.0</span>
+          <span className="text-zinc-400 font-mono">r.outers v1.0.0</span>
         </div>
 
       </div>

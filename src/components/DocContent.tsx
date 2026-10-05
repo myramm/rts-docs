@@ -42,7 +42,7 @@ export const DocContent: React.FC<DocContentProps> = ({ activeSection }) => {
           <div className="space-y-3 pb-6 border-b border-zinc-800/80">
             <div className="inline-flex items-center space-x-2 px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 font-mono">
               <span className="w-2 h-2 rounded-full bg-emerald-400"></span>
-              <span>rts v2.4.0 · Termux & Linux Ready</span>
+              <span>rts v1.0.0 · Termux & Mobile Vibe Coding Ready</span>
             </div>
 
             <h1 className="text-3xl font-bold text-white tracking-tight">
@@ -50,11 +50,11 @@ export const DocContent: React.FC<DocContentProps> = ({ activeSection }) => {
             </h1>
             
             <p className="text-zinc-300 text-base leading-relaxed">
-              Selamat datang di dokumentasi resmi <b>r.outers (rts)</b> — Autonomous AI Coding Agent berkecepatan tinggi yang dirancang khusus untuk berjalan ringan, responsif, dan stabil di <b>Android Termux</b> serta <b>Linux Server</b>.
+              Selamat datang di dokumentasi resmi <b>r.outers (rts)</b> — CLI tool ultra-ringan buat <b>vibe coding langsung di HP (Android / Termux)</b> dan Terminal Linux/PC. Mirip seperti <b>9routers</b>, rts adalah router tool cepat yang menghubungkan kamu ke berbagai model LLM tanpa bloatware rumit ala OpenCode.
             </p>
 
             <p className="text-zinc-400 text-xs leading-relaxed">
-              Mendukung eksekusi shell otonom dengan konfirmasi tombol panah, 80+ model NVIDIA NIM (Nemotron, DeepSeek R1, Qwen 2.5), sistem filter Anti-Slop, dan konfigurasi manual tersentralisasi.
+              Fokus utamanya simpel: ketik prompt di smartphone, route ke provider (80+ NVIDIA NIM, DeepSeek R1, Qwen 2.5 Coder, Custom endpoint), eksekusi shell command dengan kontrol penuh, dan langsung gas ngoding di mana aja dari HP.
             </p>
           </div>
 

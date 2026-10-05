@@ -81,7 +81,7 @@ export function App() {
 
       <footer className="border-t border-zinc-900 py-6 text-xs text-zinc-500 font-mono">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
-          <span>r.outers (rts) v2.4.0</span>
+          <span>r.outers (rts) v1.0.0</span>
           <a
             href="https://github.com/myramm/r.outers"
             target="_blank"

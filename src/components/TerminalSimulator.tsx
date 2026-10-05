@@ -18,7 +18,7 @@ export const TerminalSimulator: React.FC = () => {
     {
       id: 'welcome',
       type: 'output',
-      content: `r.outers (rts) v2.4.0 — Autonomous AI Coding Agent for Termux & Linux
+      content: `r.outers (rts) v1.0.0 — Fast Mobile & Terminal Vibe Coding Tool (Termux Ready)
 Engine: NVIDIA NIM | Active Model: nvidia/nemotron-3-super-120b-a12b
 Type /help for slash commands or enter your prompt.`
     }

@@ -40,7 +40,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="font-bold text-sm tracking-tight text-white flex items-center space-x-1.5">
               <span>r.outers</span>
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-zinc-800 text-zinc-300">
-                v2.4.0
+                v1.0.0
               </span>
             </span>
           </div>

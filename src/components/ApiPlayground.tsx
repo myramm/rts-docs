@@ -51,7 +51,7 @@ export const ApiPlayground: React.FC = () => {
       if (activeEndpoint === '/api/status') {
         setResponseJson(JSON.stringify({
           name: "r.outers (rts)",
-          version: "2.4.0",
+          version: "1.0.0",
           status: "ONLINE",
           default_model: "nvidia/nemotron-3-super-120b-a12b",
           providers: ["nvidia", "clouvia", "atria", "openai_compatible"]
