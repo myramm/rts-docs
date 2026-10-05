@@ -15,7 +15,7 @@ app.get('/api/status', (req, res) => {
     author: 'myramm (ラム)',
     muse: 'Akari Watanabe 🌸',
     default_model: 'nvidia/nemotron-3-super-120b-a12b',
-    providers: ['nvidia', 'clouvia', 'atria', 'openai_compatible'],
+    providers: ['nvidia', 'atria', 'openai_compatible'],
     total_models_available: 84,
     runtime: 'Python 3.10+ / Linux & Android Termux',
     config_file: '~/.routers_config.json'

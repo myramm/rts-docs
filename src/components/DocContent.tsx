@@ -394,13 +394,6 @@ rts`}
       "temperature": 0.2,
       "max_tokens": 8192
     },
-    "clouvia": {
-      "name": "Clouvia Router",
-      "base_url": "https://router.clouvia.id/v1",
-      "api_key": "your-clouvia-key",
-      "model": "free-model",
-      "timeout": 120
-    },
     "atria": {
       "name": "Atria ASI",
       "base_url": "https://api.atria-asi.ai/v1",

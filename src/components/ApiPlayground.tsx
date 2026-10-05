@@ -54,7 +54,7 @@ export const ApiPlayground: React.FC = () => {
           version: "1.0.0",
           status: "ONLINE",
           default_model: "nvidia/nemotron-3-super-120b-a12b",
-          providers: ["nvidia", "clouvia", "atria", "openai_compatible"]
+          providers: ["nvidia", "atria", "openai_compatible"]
         }, null, 2));
       } else {
         setResponseJson(JSON.stringify({ message: "Mock response generated" }, null, 2));
