@@ -1,235 +1,93 @@
-import React, { useState, useEffect } from 'react';
-import { Cpu, Search, Copy, Check, Zap, Sparkles, Filter, ShieldCheck, Terminal } from 'lucide-react';
-
-interface ModelItem {
-  id: string;
-  name: string;
-  provider: string;
-  category: string;
-  context: string;
-  speed: string;
-  tools: boolean;
-  recommended: boolean;
-  tags: string[];
-}
+import React, { useState } from 'react';
+import { Search, Copy, Check } from 'lucide-react';
 
 export const ModelExplorer: React.FC = () => {
-  const [models, setModels] = useState<ModelItem[]>([]);
   const [search, setSearch] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [copiedModel, setCopiedModel] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetch('/api/models')
-      .then(res => res.json())
-      .then(data => setModels(data.models || []))
-      .catch(() => {
-        setModels([
-          {
-            id: 'nvidia/nemotron-3-super-120b-a12b',
-            name: 'Nemotron 3 Super 120B',
-            provider: 'NVIDIA NIM',
-            category: 'Flagship Reasoning & Coding',
-            context: '128k',
-            speed: 'Ultra Fast (<1.2s TTFT)',
-            tools: true,
-            recommended: true,
-            tags: ['Default', 'Fast', 'Precise Tool Calling']
-          },
-          {
-            id: 'openai/gpt-oss-20b',
-            name: 'GPT-OSS 20B',
-            provider: 'NVIDIA NIM',
-            category: 'Lightweight Agentic',
-            context: '32k',
-            speed: 'Instant (<400ms)',
-            tools: true,
-            recommended: true,
-            tags: ['Zero-Lag', 'Low-Memory', 'Termux-Optimized']
-          },
-          {
-            id: 'deepseek-ai/deepseek-r1',
-            name: 'DeepSeek R1',
-            provider: 'NVIDIA NIM',
-            category: 'Deep Chain-of-Thought Reasoning',
-            context: '64k',
-            speed: 'Reasoning Mode',
-            tools: true,
-            recommended: true,
-            tags: ['Math & Logic', 'Architecture Planning']
-          },
-          {
-            id: 'qwen/qwen2.5-coder-32b-instruct',
-            name: 'Qwen 2.5 Coder 32B',
-            provider: 'NVIDIA NIM',
-            category: 'Specialized Coding',
-            context: '32k',
-            speed: 'Very Fast',
-            tools: true,
-            recommended: true,
-            tags: ['Python / Go / TS Master', 'Diffs']
-          }
-        ]);
-      });
-  }, []);
+  const models = [
+    { id: 'nvidia/nemotron-3-super-120b-a12b', name: 'Nemotron 3 Super 120B', context: '128k', latency: '<1.2s', tools: 'Yes', category: 'Flagship' },
+    { id: 'openai/gpt-oss-20b', name: 'GPT-OSS 20B', context: '32k', latency: '<400ms', tools: 'Yes', category: 'Lightweight' },
+    { id: 'deepseek-ai/deepseek-r1', name: 'DeepSeek R1', context: '64k', latency: 'Reasoning', tools: 'Yes', category: 'Reasoning' },
+    { id: 'qwen/qwen2.5-coder-32b-instruct', name: 'Qwen 2.5 Coder 32B', context: '32k', latency: 'Fast', tools: 'Yes', category: 'Coding' },
+    { id: 'meta/llama-3.3-70b-instruct', name: 'Llama 3.3 70B Instruct', context: '128k', latency: 'Fast', tools: 'Yes', category: 'General' },
+    { id: 'mistralai/mistral-large-2407', name: 'Mistral Large 2', context: '128k', latency: 'Fast', tools: 'Yes', category: 'Multilingual' },
+    { id: 'z-ai/glm-5.3', name: 'GLM 5.3 Reasoning', context: '64k', latency: 'Reasoning', tools: 'Yes', category: 'Reasoning' },
+    { id: 'google/gemma-2-27b-it', name: 'Gemma 2 27B IT', context: '8k', latency: 'Instant', tools: 'Yes', category: 'Compact' }
+  ];
 
-  const handleCopyCommand = (modelId: string) => {
-    const cmd = `/model ${modelId}`;
-    navigator.clipboard.writeText(cmd);
-    setCopiedModel(modelId);
-    setTimeout(() => setCopiedModel(null), 2000);
+  const handleCopy = (id: string) => {
+    navigator.clipboard.writeText(`/model ${id}`);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 1500);
   };
 
-  const filteredModels = models.filter(m => {
-    const matchesQuery = m.name.toLowerCase().includes(search.toLowerCase()) ||
-                         m.id.toLowerCase().includes(search.toLowerCase()) ||
-                         m.tags.some(t => t.toLowerCase().includes(search.toLowerCase()));
-    if (selectedCategory === 'all') return matchesQuery;
-    if (selectedCategory === 'recommended') return matchesQuery && m.recommended;
-    return matchesQuery && m.category.toLowerCase().includes(selectedCategory.toLowerCase());
-  });
+  const filtered = models.filter(m =>
+    m.name.toLowerCase().includes(search.toLowerCase()) ||
+    m.id.toLowerCase().includes(search.toLowerCase()) ||
+    m.category.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <div className="relative rounded-2xl p-6 md:p-8 bg-gradient-to-r from-[#10172b] via-[#151128] to-[#1a1024] border border-cyber-border overflow-hidden">
-        <div className="relative z-10 space-y-2">
-          <div className="flex items-center space-x-2 text-cyber-yellow text-xs font-mono font-bold uppercase tracking-wider">
-            <Zap className="w-4 h-4 fill-cyber-yellow" />
-            <span>Multi-Model Router Architecture</span>
-          </div>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
-            NVIDIA NIM 80+ Models & Custom Providers
-          </h1>
-          <p className="text-gray-400 text-sm max-w-2xl leading-relaxed">
-            Switch effortlessly between ultra-fast sub-400ms agents, 128k context flagships, and deep reasoning models in real-time using <code className="text-cyber-cyan font-mono">/model &lt;id&gt;</code>.
-          </p>
+    <div className="max-w-4xl mx-auto space-y-6 py-6 text-zinc-300">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <h1 className="text-xl font-bold text-white tracking-tight">NVIDIA NIM 80+ Models Catalog</h1>
+          <p className="text-xs text-zinc-400 mt-0.5">Switch any model instantly using <code className="text-zinc-200">/model &lt;id&gt;</code>.</p>
         </div>
-      </div>
 
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 rounded-xl bg-cyber-card border border-cyber-border">
-        <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 absolute left-3 top-3 text-gray-500" />
+        <div className="relative w-full sm:w-64">
+          <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-zinc-500" />
           <input
             type="text"
-            placeholder="Search by name, ID, or tag..."
+            placeholder="Filter models..."
             value={search}
             onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-[#090d16] border border-cyber-border rounded-lg text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-cyber-cyan/50"
+            className="w-full pl-8 pr-3 py-1.5 bg-zinc-900 border border-zinc-800 rounded-md text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-zinc-600"
           />
-        </div>
-
-        <div className="flex items-center space-x-2 w-full sm:w-auto overflow-x-auto text-xs font-medium">
-          <button
-            onClick={() => setSelectedCategory('all')}
-            className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-              selectedCategory === 'all'
-                ? 'bg-cyber-cyan text-black font-semibold'
-                : 'bg-[#090d16] text-gray-400 hover:text-white border border-cyber-border'
-            }`}
-          >
-            All Models
-          </button>
-          <button
-            onClick={() => setSelectedCategory('recommended')}
-            className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-              selectedCategory === 'recommended'
-                ? 'bg-cyber-pink text-white font-semibold'
-                : 'bg-[#090d16] text-gray-400 hover:text-white border border-cyber-border'
-            }`}
-          >
-            ⭐ Recommended
-          </button>
-          <button
-            onClick={() => setSelectedCategory('reasoning')}
-            className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-              selectedCategory === 'reasoning'
-                ? 'bg-cyber-purple text-white font-semibold'
-                : 'bg-[#090d16] text-gray-400 hover:text-white border border-cyber-border'
-            }`}
-          >
-            🧠 Deep Reasoning
-          </button>
-          <button
-            onClick={() => setSelectedCategory('coding')}
-            className={`px-3 py-1.5 rounded-lg whitespace-nowrap transition-all ${
-              selectedCategory === 'coding'
-                ? 'bg-cyber-yellow text-black font-semibold'
-                : 'bg-[#090d16] text-gray-400 hover:text-white border border-cyber-border'
-            }`}
-          >
-            💻 Coding Masters
-          </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {filteredModels.map(model => (
-          <div
-            key={model.id}
-            className={`relative p-5 rounded-2xl border transition-all hover:scale-[1.01] ${
-              model.recommended
-                ? 'bg-[#0e1424] border-cyber-cyan/30 shadow-lg shadow-neon-cyan/5'
-                : 'bg-cyber-card border-cyber-border'
-            }`}
-          >
-            <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center space-x-2">
-                  <h3 className="font-bold text-gray-100 text-base">{model.name}</h3>
-                  {model.recommended && (
-                    <span className="text-[10px] uppercase font-bold font-mono px-2 py-0.5 rounded-full bg-cyber-pink/20 text-cyber-pink border border-cyber-pink/40">
-                      Recommended
-                    </span>
-                  )}
-                </div>
-                <div className="text-xs font-mono text-gray-400">{model.id}</div>
-              </div>
-
-              <button
-                onClick={() => handleCopyCommand(model.id)}
-                className="p-2 rounded-lg bg-[#090d16] border border-cyber-border text-gray-400 hover:text-cyber-cyan transition-all"
-                title="Copy /model command"
-              >
-                {copiedModel === model.id ? (
-                  <span className="flex items-center text-[11px] text-cyber-green space-x-1 font-mono">
-                    <Check className="w-3.5 h-3.5" />
-                    <span>Copied!</span>
-                  </span>
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-              </button>
-            </div>
-
-            <div className="mt-4 grid grid-cols-3 gap-2 text-xs font-mono pt-3 border-t border-cyber-border/60">
-              <div>
-                <span className="text-gray-500 block text-[10px]">CONTEXT</span>
-                <span className="text-cyber-cyan font-semibold">{model.context}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">SPEED / TTFT</span>
-                <span className="text-cyber-yellow font-semibold">{model.speed}</span>
-              </div>
-              <div>
-                <span className="text-gray-500 block text-[10px]">TOOL CALLING</span>
-                <span className="text-cyber-green font-semibold flex items-center">
-                  <ShieldCheck className="w-3 h-3 mr-1 inline" /> 100% Native
-                </span>
-              </div>
-            </div>
-
-            <div className="mt-3 flex flex-wrap gap-1.5">
-              {model.tags.map((tag, tIdx) => (
-                <span
-                  key={tIdx}
-                  className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#090d16] text-gray-300 border border-cyber-border"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
+      <div className="overflow-x-auto rounded-lg border border-zinc-800 bg-zinc-950 text-xs">
+        <table className="w-full text-left font-mono">
+          <thead className="border-b border-zinc-800 bg-zinc-900/50 text-zinc-400 uppercase text-[11px]">
+            <tr>
+              <th className="p-3">Model</th>
+              <th className="p-3">Category</th>
+              <th className="p-3">Context</th>
+              <th className="p-3">Speed</th>
+              <th className="p-3 text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-800 text-zinc-300">
+            {filtered.map(m => (
+              <tr key={m.id} className="hover:bg-zinc-900/40">
+                <td className="p-3">
+                  <span className="font-semibold text-white block">{m.name}</span>
+                  <span className="text-[11px] text-zinc-500">{m.id}</span>
+                </td>
+                <td className="p-3 text-zinc-400 font-sans">{m.category}</td>
+                <td className="p-3">{m.context}</td>
+                <td className="p-3 text-emerald-400">{m.latency}</td>
+                <td className="p-3 text-right font-sans">
+                  <button
+                    onClick={() => handleCopy(m.id)}
+                    className="px-2.5 py-1 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white transition-colors text-[11px]"
+                  >
+                    {copiedId === m.id ? (
+                      <span className="flex items-center space-x-1 text-emerald-400">
+                        <Check className="w-3 h-3" />
+                        <span>Copied</span>
+                      </span>
+                    ) : (
+                      <span>Copy command</span>
+                    )}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

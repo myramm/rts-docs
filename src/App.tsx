@@ -4,16 +4,12 @@ import { Sidebar } from './components/Sidebar';
 import { DocContent } from './components/DocContent';
 import { TerminalSimulator } from './components/TerminalSimulator';
 import { ModelExplorer } from './components/ModelExplorer';
-import { SkillCatalog } from './components/SkillCatalog';
-import { ApiPlayground } from './components/ApiPlayground';
 import { SearchModal } from './components/SearchModal';
-import { Heart } from 'lucide-react';
 
 export function App() {
-  const [activeTab, setActiveTab] = useState<'docs' | 'simulator' | 'models' | 'skills' | 'playground'>('docs');
-  const [activeSection, setActiveSection] = useState('quickstart');
+  const [activeTab, setActiveTab] = useState<'docs' | 'simulator' | 'models'>('docs');
+  const [activeSection, setActiveSection] = useState('introduction');
   const [searchOpen, setSearchOpen] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -27,7 +23,7 @@ export function App() {
   }, []);
 
   const handleSelectSearchResult = (sectionId: string, tabName?: string) => {
-    if (tabName && ['docs', 'simulator', 'models', 'skills', 'playground'].includes(tabName)) {
+    if (tabName && ['docs', 'simulator', 'models'].includes(tabName)) {
       setActiveTab(tabName as any);
     } else {
       setActiveTab('docs');
@@ -36,13 +32,11 @@ export function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#080b11] text-gray-100 flex flex-col selection:bg-cyber-pink selection:text-white">
+    <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col font-sans">
       <Navbar
         activeTab={activeTab}
         setActiveTab={(t) => setActiveTab(t as any)}
         onOpenSearch={() => setSearchOpen(true)}
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
       />
 
       <SearchModal
@@ -51,72 +45,43 @@ export function App() {
         onSelectResult={handleSelectSearchResult}
       />
 
-      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 flex">
+      <div className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 flex">
         {activeTab === 'docs' && (
           <>
             <Sidebar
               activeSection={activeSection}
               setActiveSection={setActiveSection}
-              mobileOpen={mobileMenuOpen}
-              setMobileOpen={setMobileMenuOpen}
             />
-
-            <main className="flex-1 py-8 px-0 md:px-8 overflow-y-auto">
-              <DocContent
-                activeSection={activeSection}
-                onNavigateTab={(tab) => setActiveTab(tab as any)}
-              />
+            <main className="flex-1 md:pl-8 py-2 overflow-y-auto">
+              <DocContent activeSection={activeSection} />
             </main>
           </>
         )}
 
         {activeTab === 'simulator' && (
-          <main className="flex-1 py-6 w-full">
+          <main className="flex-1 py-4 w-full">
             <TerminalSimulator />
           </main>
         )}
 
         {activeTab === 'models' && (
-          <main className="flex-1 py-8 w-full">
+          <main className="flex-1 py-4 w-full">
             <ModelExplorer />
-          </main>
-        )}
-
-        {activeTab === 'skills' && (
-          <main className="flex-1 py-8 w-full">
-            <SkillCatalog />
-          </main>
-        )}
-
-        {activeTab === 'playground' && (
-          <main className="flex-1 py-8 w-full">
-            <ApiPlayground />
           </main>
         )}
       </div>
 
-      <footer className="border-t border-cyber-border/80 bg-[#06080d] py-8 text-xs text-gray-400 font-mono">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center space-x-2">
-            <span className="font-bold text-gray-200">r.outers (rts) v2.4.0</span>
-            <span>—</span>
-            <span className="text-gray-400">Autonomous AI Coding Agent for Termux & Linux</span>
-          </div>
-
-          <div className="flex items-center space-x-4">
-            <span className="flex items-center text-cyber-pink">
-              Powered by <Heart className="w-3.5 h-3.5 mx-1 fill-cyber-pink inline" /> Akari Watanabe Energy
-            </span>
-            <span>·</span>
-            <a
-              href="https://github.com/myramm/r.outers"
-              target="_blank"
-              rel="noreferrer"
-              className="text-cyber-cyan hover:underline"
-            >
-              @myramm/r.outers
-            </a>
-          </div>
+      <footer className="border-t border-zinc-900 py-6 text-xs text-zinc-500 font-mono">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+          <span>r.outers (rts) v2.4.0</span>
+          <a
+            href="https://github.com/myramm/r.outers"
+            target="_blank"
+            rel="noreferrer"
+            className="hover:text-zinc-300"
+          >
+            GitHub
+          </a>
         </div>
       </footer>
     </div>

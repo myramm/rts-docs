@@ -1,12 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Terminal, Send, RefreshCw, Sparkles, HelpCircle, Shield, Cpu, Play } from 'lucide-react';
+import { Terminal, Send, RefreshCw } from 'lucide-react';
 
 interface TerminalMessage {
   id: string;
-  type: 'input' | 'output' | 'system';
+  type: 'input' | 'output';
   content: string;
-  model?: string;
-  timestamp: string;
 }
 
 export const TerminalSimulator: React.FC = () => {
@@ -15,156 +13,57 @@ export const TerminalSimulator: React.FC = () => {
   const [historyIndex, setHistoryIndex] = useState<number>(-1);
   const [draftInput, setDraftInput] = useState('');
   const [currentModel, setCurrentModel] = useState('nvidia/nemotron-3-super-120b-a12b');
-  const [currentProvider, setCurrentProvider] = useState('nvidia');
   const [isProcessing, setIsProcessing] = useState(false);
   const [messages, setMessages] = useState<TerminalMessage[]>([
     {
       id: 'welcome',
-      type: 'system',
-      content: `\x1b[36m╔════════════════════════════════════════════════════════════════╗\x1b[0m
-\x1b[36m║\x1b[0m  \x1b[1m⚡ r.outers (rts) — Autonomous AI Coding Agent v2.4.0\x1b[0m        \x1b[36m║\x1b[0m
-\x1b[36m║\x1b[0m  Engine: \x1b[33mNVIDIA NIM\x1b[0m | Platform: \x1b[32mAndroid Termux & Linux\x1b[0m         \x1b[36m║\x1b[0m
-\x1b[36m║\x1b[0m  Model : \x1b[35mNemotron 3 Super 120B\x1b[0m | Status: \x1b[32m⚡ Ready\x1b[0m                 \x1b[36m║\x1b[0m
-\x1b[36m╚════════════════════════════════════════════════════════════════╝\x1b[0m
-Ketik \x1b[33m/help\x1b[0m untuk panduan atau masukkan prompt tugas coding kamu!`,
-      timestamp: new Date().toLocaleTimeString()
+      type: 'output',
+      content: `r.outers (rts) v2.4.0 — Autonomous AI Coding Agent for Termux & Linux
+Engine: NVIDIA NIM | Active Model: nvidia/nemotron-3-super-120b-a12b
+Type /help for slash commands or enter your prompt.`
     }
   ]);
 
   const terminalEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const scrollToBottom = () => {
-    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
   useEffect(() => {
-    scrollToBottom();
+    terminalEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isProcessing]);
 
-  // ANSI Color Code to HTML Spans parser
-  const renderAnsi = (text: string) => {
-    const lines = text.split('\n');
-    return lines.map((line, lIdx) => {
-      const parts = line.split(/(\x1b\[[0-9;]*m)/g);
-      let currentClasses = 'text-gray-300';
-      let isBold = false;
-
-      const elements: React.ReactNode[] = [];
-
-      parts.forEach((part, pIdx) => {
-        if (part.startsWith('\x1b[')) {
-          if (part === '\x1b[0m') {
-            currentClasses = 'text-gray-300';
-            isBold = false;
-          } else if (part === '\x1b[1m') {
-            isBold = true;
-          } else if (part === '\x1b[31m') {
-            currentClasses = 'text-red-400 font-semibold';
-          } else if (part === '\x1b[32m') {
-            currentClasses = 'text-emerald-400 font-semibold';
-          } else if (part === '\x1b[33m') {
-            currentClasses = 'text-amber-300 font-semibold';
-          } else if (part === '\x1b[34m') {
-            currentClasses = 'text-blue-400 font-semibold';
-          } else if (part === '\x1b[35m') {
-            currentClasses = 'text-pink-400 font-semibold';
-          } else if (part === '\x1b[36m') {
-            currentClasses = 'text-cyan-400 font-semibold';
-          }
-        } else if (part) {
-          elements.push(
-            <span
-              key={pIdx}
-              className={`${currentClasses} ${isBold ? 'font-bold' : ''}`}
-            >
-              {part}
-            </span>
-          );
-        }
-      });
-
-      return (
-        <div key={lIdx} className="min-h-[1.25rem] leading-relaxed">
-          {elements.length > 0 ? elements : <span>&nbsp;</span>}
-        </div>
-      );
-    });
-  };
-
   const handleExecute = async (cmdText?: string) => {
-    const commandToSend = (cmdText !== undefined ? cmdText : input).trim();
-    if (!commandToSend || isProcessing) return;
+    const cmd = (cmdText !== undefined ? cmdText : input).trim();
+    if (!cmd || isProcessing) return;
 
-    setHistory(prev => [...prev, commandToSend]);
+    setHistory(prev => [...prev, cmd]);
     setHistoryIndex(-1);
     setInput('');
 
-    const userMsg: TerminalMessage = {
-      id: Math.random().toString(),
-      type: 'input',
-      content: commandToSend,
-      model: currentModel,
-      timestamp: new Date().toLocaleTimeString()
-    };
-    setMessages(prev => [...prev, userMsg]);
+    setMessages(prev => [...prev, { id: Math.random().toString(), type: 'input', content: cmd }]);
     setIsProcessing(true);
 
-    try {
-      const response = await fetch('/api/terminal/execute', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          input: commandToSend,
-          currentModel,
-          currentProvider
-        })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        if (data.newModel) setCurrentModel(data.newModel);
-        if (data.newProvider) setCurrentProvider(data.newProvider);
-
-        setMessages(prev => [
-          ...prev,
-          {
-            id: Math.random().toString(),
-            type: 'output',
-            content: data.output,
-            timestamp: new Date().toLocaleTimeString()
-          }
-        ]);
+    setTimeout(() => {
+      let output = '';
+      if (cmd === '/help') {
+        output = `/setup      Configure API keys and providers\n/model      Switch active AI model\n/skills     List active prompt skills\n/memory     View token usage\n/clear      Reset conversation context`;
+      } else if (cmd.startsWith('/model')) {
+        const mod = cmd.replace('/model', '').trim() || 'nvidia/nemotron-3-super-120b-a12b';
+        setCurrentModel(mod);
+        output = `✔ Switched active model to: ${mod}`;
+      } else if (cmd === '/skills') {
+        output = `Active skills:\n • anti-slop (DURING mode)\n • systematic-debugging\n • apktool-modding`;
+      } else if (cmd === '/memory') {
+        output = `Context: 128k tokens | History turns: 3 | Active buffer: 2.1k tokens`;
+      } else if (cmd === '/clear') {
+        output = `✔ Conversation context reset.`;
       } else {
-        throw new Error('API offline');
+        output = `RTS > Writing script.py (24 lines)\n⚡ RTS > Running python3 script.py\n✔ RTS > Completed task successfully.`;
       }
-    } catch (err) {
-      setTimeout(() => {
-        let simulatedOutput = '';
-        if (commandToSend === '/help') {
-          simulatedOutput = `\x1b[36m/setup\x1b[0m      Configure API keys and providers\n\x1b[36m/model\x1b[0m      Switch active AI model\n\x1b[36m/skills\x1b[0m     List active skill prompt extensions\n\x1b[36m/clear\x1b[0m      Reset conversation context`;
-        } else if (commandToSend.startsWith('/model')) {
-          const mod = commandToSend.replace('/model', '').trim() || 'nvidia/nemotron-3-super-120b-a12b';
-          setCurrentModel(mod);
-          simulatedOutput = `\x1b[32m✔ Model successfully switched to:\x1b[0m \x1b[1m${mod}\x1b[0m`;
-        } else {
-          simulatedOutput = `\x1b[35mRTS > Planning task execution...\x1b[0m\n\x1b[33mRTS > Writing script.py\x1b[0m\n\x1b[32m✔ RTS > Completed task successfully!\x1b[0m`;
-        }
 
-        setMessages(prev => [
-          ...prev,
-          {
-            id: Math.random().toString(),
-            type: 'output',
-            content: simulatedOutput,
-            timestamp: new Date().toLocaleTimeString()
-          }
-        ]);
-      }, 500);
-    } finally {
+      setMessages(prev => [...prev, { id: Math.random().toString(), type: 'output', content: output }]);
       setIsProcessing(false);
       setTimeout(() => inputRef.current?.focus(), 50);
-    }
+    }, 300);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -176,21 +75,21 @@ Ketik \x1b[33m/help\x1b[0m untuk panduan atau masukkan prompt tugas coding kamu!
       if (history.length === 0) return;
       if (historyIndex === -1) {
         setDraftInput(input);
-        const nextIdx = history.length - 1;
-        setHistoryIndex(nextIdx);
-        setInput(history[nextIdx]);
+        const idx = history.length - 1;
+        setHistoryIndex(idx);
+        setInput(history[idx]);
       } else if (historyIndex > 0) {
-        const nextIdx = historyIndex - 1;
-        setHistoryIndex(nextIdx);
-        setInput(history[nextIdx]);
+        const idx = historyIndex - 1;
+        setHistoryIndex(idx);
+        setInput(history[idx]);
       }
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       if (historyIndex === -1) return;
       if (historyIndex < history.length - 1) {
-        const nextIdx = historyIndex + 1;
-        setHistoryIndex(nextIdx);
-        setInput(history[nextIdx]);
+        const idx = historyIndex + 1;
+        setHistoryIndex(idx);
+        setInput(history[idx]);
       } else {
         setHistoryIndex(-1);
         setInput(draftInput);
@@ -198,113 +97,57 @@ Ketik \x1b[33m/help\x1b[0m untuk panduan atau masukkan prompt tugas coding kamu!
     }
   };
 
-  const formattedModelName = currentModel.replace('nvidia/', '').replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  const modelLabel = currentModel.replace('nvidia/', '').replace(/-/g, ' ');
 
   return (
-    <div className="flex flex-col h-[calc(100vh-140px)] max-w-6xl mx-auto rounded-2xl overflow-hidden border border-cyber-border bg-[#090d16] shadow-2xl shadow-neon-cyan/5">
-      
-      {/* Top Terminal Bar */}
-      <div className="flex items-center justify-between px-4 py-3 bg-[#0d121f] border-b border-cyber-border">
+    <div className="max-w-4xl mx-auto my-6 rounded-lg border border-zinc-800 bg-black font-mono text-xs overflow-hidden shadow-xl">
+      {/* Header */}
+      <div className="flex items-center justify-between px-3.5 py-2 border-b border-zinc-800 bg-zinc-950 text-zinc-400">
         <div className="flex items-center space-x-2">
-          <div className="w-3 h-3 rounded-full bg-[#FF5F56] border border-[#E0443E]"></div>
-          <div className="w-3 h-3 rounded-full bg-[#FFBD2E] border border-[#DEA123]"></div>
-          <div className="w-3 h-3 rounded-full bg-[#27C93F] border border-[#1AAB29]"></div>
-          <span className="ml-3 font-mono text-xs font-semibold text-gray-300 flex items-center space-x-1.5">
-            <Terminal className="w-3.5 h-3.5 text-cyber-cyan" />
-            <span>r.outers @ termux-session-0</span>
-          </span>
+          <Terminal className="w-3.5 h-3.5 text-zinc-400" />
+          <span>rts session</span>
         </div>
-
-        <div className="flex items-center space-x-3 text-xs font-mono">
-          <span className="hidden sm:flex items-center space-x-1 px-2 py-0.5 rounded bg-cyber-pink/10 text-cyber-pink border border-cyber-pink/30">
-            <Sparkles className="w-3 h-3" />
-            <span>Akari Engine Active</span>
-          </span>
-
-          <button
-            onClick={() => setMessages([])}
-            className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-cyber-card transition-all"
-            title="Clear terminal screen"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-          </button>
-        </div>
+        <button
+          onClick={() => setMessages([])}
+          className="p-1 hover:text-white rounded"
+          title="Clear screen"
+        >
+          <RefreshCw className="w-3 h-3" />
+        </button>
       </div>
 
-      {/* Terminal Screen Body */}
+      {/* Body */}
       <div 
         onClick={() => inputRef.current?.focus()}
-        className="flex-1 overflow-y-auto p-4 md:p-6 font-mono text-xs md:text-sm space-y-4 cursor-text bg-[#070a10]"
+        className="p-4 space-y-3 min-h-[300px] max-h-[460px] overflow-y-auto cursor-text text-zinc-200 leading-relaxed"
       >
         {messages.map(msg => (
-          <div key={msg.id} className="space-y-1">
-            {msg.type === 'input' && (
-              <div className="flex items-start space-x-2 text-cyber-cyan">
-                <span className="text-cyber-pink font-bold">r.outers &gt;</span>
-                <span className="text-gray-100 font-semibold">{msg.content}</span>
+          <div key={msg.id} className="space-y-0.5">
+            {msg.type === 'input' ? (
+              <div className="text-zinc-100 flex items-start space-x-2">
+                <span className="text-zinc-500 font-bold">r.outers &gt;</span>
+                <span>{msg.content}</span>
               </div>
-            )}
-            {msg.type !== 'input' && (
-              <div className="text-gray-300 pl-1">
-                {renderAnsi(msg.content)}
-              </div>
+            ) : (
+              <pre className="text-zinc-400 whitespace-pre-wrap pl-2 border-l border-zinc-800">
+                {msg.content}
+              </pre>
             )}
           </div>
         ))}
 
         {isProcessing && (
-          <div className="flex items-center space-x-2 text-cyber-cyan animate-pulse">
-            <span className="w-2 h-2 rounded-full bg-cyber-cyan"></span>
-            <span>r.outers is reasoning & executing tools...</span>
+          <div className="text-zinc-500 animate-pulse pl-2">
+            r.outers is executing...
           </div>
         )}
-
         <div ref={terminalEndRef} />
       </div>
 
-      {/* Quick Action Badges */}
-      <div className="px-4 py-2 bg-[#0a0e1a] border-t border-cyber-border flex items-center space-x-2 overflow-x-auto text-[11px] font-mono">
-        <span className="text-gray-400 flex items-center shrink-0">
-          <Play className="w-3 h-3 mr-1 text-cyber-cyan" /> Quick Test:
-        </span>
-        <button
-          onClick={() => handleExecute('/help')}
-          className="px-2.5 py-1 rounded-lg bg-cyber-card hover:bg-cyber-border text-gray-300 hover:text-cyber-cyan border border-cyber-border shrink-0 transition-all"
-        >
-          /help
-        </button>
-        <button
-          onClick={() => handleExecute('/skills')}
-          className="px-2.5 py-1 rounded-lg bg-cyber-card hover:bg-cyber-border text-gray-300 hover:text-cyber-purple border border-cyber-border shrink-0 transition-all"
-        >
-          /skills
-        </button>
-        <button
-          onClick={() => handleExecute('/model deepseek-ai/deepseek-r1')}
-          className="px-2.5 py-1 rounded-lg bg-cyber-card hover:bg-cyber-border text-gray-300 hover:text-cyber-yellow border border-cyber-border shrink-0 transition-all"
-        >
-          /model deepseek-r1
-        </button>
-        <button
-          onClick={() => handleExecute('Buatkan REST API Anime dengan TypeScript')}
-          className="px-2.5 py-1 rounded-lg bg-cyber-card hover:bg-cyber-border text-gray-300 hover:text-cyber-pink border border-cyber-border shrink-0 transition-all"
-        >
-          Buat REST API Anime
-        </button>
-        <button
-          onClick={() => handleExecute('/memory')}
-          className="px-2.5 py-1 rounded-lg bg-cyber-card hover:bg-cyber-border text-gray-300 hover:text-cyber-green border border-cyber-border shrink-0 transition-all"
-        >
-          /memory
-        </button>
-      </div>
-
-      {/* Double-Line Prompt Bar */}
-      <div className="p-3 bg-[#0d121f] border-t border-cyber-border flex flex-col space-y-2">
+      {/* Input */}
+      <div className="p-3 border-t border-zinc-800 bg-zinc-950/80 space-y-1.5">
         <div className="flex items-center space-x-2">
-          <span className="font-mono text-sm font-bold text-cyber-pink shrink-0">
-            r.outers &gt;
-          </span>
+          <span className="text-zinc-400 font-bold">r.outers &gt;</span>
           <input
             ref={inputRef}
             type="text"
@@ -312,41 +155,24 @@ Ketik \x1b[33m/help\x1b[0m untuk panduan atau masukkan prompt tugas coding kamu!
             onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             disabled={isProcessing}
-            placeholder="Type a prompt, slash command, or use UP/DOWN arrow keys..."
-            className="flex-1 bg-transparent font-mono text-sm text-gray-100 placeholder-gray-500 focus:outline-none"
+            placeholder="Type /help, /skills, /model, or enter command..."
+            className="flex-1 bg-transparent text-zinc-100 placeholder-zinc-600 focus:outline-none"
             autoFocus
           />
           <button
             onClick={() => handleExecute()}
             disabled={!input.trim() || isProcessing}
-            className="p-1.5 rounded-lg bg-cyber-cyan text-black hover:bg-cyan-300 disabled:opacity-40 disabled:hover:bg-cyber-cyan transition-all"
+            className="p-1 rounded bg-zinc-800 text-zinc-300 hover:text-white disabled:opacity-30"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-3.5 h-3.5" />
           </button>
         </div>
 
-        <div className="flex items-center justify-between pt-1 border-t border-cyber-border/50 text-[11px] font-mono text-gray-400">
-          <div className="flex items-center space-x-2">
-            <span className="text-cyber-yellow font-semibold flex items-center">
-              ⚡ {formattedModelName}
-            </span>
-            <span>·</span>
-            <span className="text-cyber-cyan">Auto Tool Calling</span>
-            <span>·</span>
-            <span className="text-emerald-400 flex items-center space-x-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-              <span>Ready</span>
-            </span>
-          </div>
-
-          <div className="hidden sm:flex items-center space-x-3 text-gray-500">
-            <span>UP/DOWN for History</span>
-            <span>·</span>
-            <span>Ctrl+C to cancel</span>
-          </div>
+        <div className="flex items-center justify-between text-[11px] text-zinc-500 pt-1 border-t border-zinc-900">
+          <span>⚡ {modelLabel} · Auto · Ready</span>
+          <span className="hidden sm:inline">UP/DOWN for history</span>
         </div>
       </div>
-
     </div>
   );
 };

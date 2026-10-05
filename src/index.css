@@ -1,42 +1,34 @@
 @import "tailwindcss";
 
-@theme {
-  --color-cyber-bg: #0a0d14;
-  --color-cyber-card: #101524;
-  --color-cyber-border: #1f293d;
-  --color-cyber-hover: #182035;
-  --color-cyber-cyan: #00F2FE;
-  --color-cyber-pink: #FF2A85;
-  --color-cyber-purple: #9B51E0;
-  --color-cyber-yellow: #FFD700;
-  --color-cyber-green: #00E676;
-  --color-cyber-text: #f3f4f6;
-  --color-cyber-muted: #9ca3af;
-}
-
 @layer base {
   body {
-    background-color: #080b11;
-    color: #e2e8f0;
-    font-family: 'Inter', system-ui, sans-serif;
+    background-color: #09090b;
+    color: #f4f4f5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-/* Custom Cyberpunk Scrollbar */
+/* Minimal Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0d121f;
+  background: #09090b;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1f293d;
-  border-radius: 3px;
+  background: #27272a;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00F2FE;
+  background: #3f3f46;
+}
+
+/* Code Typography */
+pre, code, kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }

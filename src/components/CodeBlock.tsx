@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Check, Copy, Terminal } from 'lucide-react';
+import { Check, Copy } from 'lucide-react';
 
 interface CodeBlockProps {
   code: string;
@@ -21,34 +21,24 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ code, language = 'bash', f
   };
 
   return (
-    <div className="relative group my-4 rounded-xl overflow-hidden border border-cyber-border bg-[#0d121f] shadow-lg">
+    <div className="relative my-3 rounded-lg border border-zinc-800 bg-zinc-950 font-mono text-[13px] leading-relaxed overflow-hidden">
       {filename && (
-        <div className="flex items-center justify-between px-4 py-2 bg-[#090d16] border-b border-cyber-border text-xs text-gray-400 font-mono">
-          <div className="flex items-center space-x-2">
-            <Terminal className="w-3.5 h-3.5 text-cyber-cyan" />
-            <span className="text-gray-300 font-medium">{filename}</span>
-          </div>
-          <span className="uppercase text-[10px] tracking-wider text-gray-500">{language}</span>
+        <div className="flex items-center justify-between px-3 py-1.5 border-b border-zinc-800 bg-zinc-900/60 text-xs text-zinc-400">
+          <span>{filename}</span>
+          <span className="text-[11px] text-zinc-500 lowercase">{language}</span>
         </div>
       )}
 
-      <div className="relative p-4 font-mono text-sm overflow-x-auto text-gray-200">
+      <div className="relative p-3.5 overflow-x-auto text-zinc-200">
         <button
           onClick={handleCopy}
-          className="absolute right-3 top-3 p-1.5 rounded-lg bg-cyber-card/80 hover:bg-cyber-card border border-cyber-border text-gray-400 hover:text-cyber-cyan transition-all opacity-0 group-hover:opacity-100"
-          title="Copy code"
+          className="absolute right-2.5 top-2.5 p-1.5 rounded bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-zinc-100 transition-colors"
+          title="Copy"
         >
-          {copied ? (
-            <span className="flex items-center text-xs text-cyber-green space-x-1 px-1">
-              <Check className="w-3.5 h-3.5" />
-              <span>Copied!</span>
-            </span>
-          ) : (
-            <Copy className="w-4 h-4" />
-          )}
+          {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
         </button>
 
-        <pre className="text-sm leading-relaxed whitespace-pre">
+        <pre className="pr-10 whitespace-pre">
           <code>{code}</code>
         </pre>
       </div>
