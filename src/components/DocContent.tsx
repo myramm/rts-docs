@@ -485,46 +485,74 @@ rts`}
             </div>
           </div>
 
-          {/* Color Themes Showcase */}
+          {/* Color Schemes 2-Column Split Preview */}
           <div className="space-y-3 pt-2">
-            <h2 className="text-base font-semibold text-white">2. Color Palettes (Tema Warna)</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono">
+            <h2 className="text-base font-semibold text-white">2. Color Schemes & Live Code Diff Preview</h2>
+            <p className="text-zinc-400 text-xs">
+              Mendukung menu interaktif 2-kolom dengan live syntax highlighting dan diff preview kode secara instan:
+            </p>
+
+            <CodeBlock
+              language="text"
+              filename="CLI /theme Interactive Selector"
+              code={`color scheme Color Scheme                   _─────────────────────────────────────────────────────
+  > terminal (current)           │ > you: add a greeting function
+    light                        │
+    solarized light              │   Here's the change:
+    colorblind-friendly light    │
+    dark                         │  3   import "fmt"
+    solarized dark               │  4
+    colorblind-friendly dark     │  5 - func main() {
+    tokyo night                  │  5 + func greet(name string) {
+    cyberpunk                    │  6 +     fmt.Println("Hello, " + name)
+    matrix                       │  7 + }`}
+            />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono pt-2">
               <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
-                <span className="text-cyan-400">Tokyo Night</span>
-                <span className="text-zinc-500">Cyan & Purple</span>
+                <span className="text-cyan-400">terminal (current)</span>
+                <span className="text-zinc-500">Default ANSI</span>
               </div>
               <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
-                <span className="text-pink-400">Cyberpunk Neon</span>
-                <span className="text-zinc-500">Pink & Yellow</span>
+                <span className="text-blue-400">light</span>
+                <span className="text-zinc-500">Clean Light</span>
               </div>
               <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
-                <span className="text-emerald-400">Matrix Green</span>
-                <span className="text-zinc-500">Phosphor Mint</span>
+                <span className="text-amber-400">solarized light</span>
+                <span className="text-zinc-500">Warm Solarized</span>
               </div>
               <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
-                <span className="text-amber-400">Monokai Pro</span>
-                <span className="text-zinc-500">Yellow & Green</span>
+                <span className="text-blue-400">colorblind-friendly light</span>
+                <span className="text-zinc-500">High Contrast</span>
               </div>
               <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
-                <span className="text-purple-400">Dracula</span>
-                <span className="text-zinc-500">Purple & Coral</span>
+                <span className="text-white">dark</span>
+                <span className="text-zinc-500">High Contrast Dark</span>
               </div>
               <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
-                <span className="text-blue-400">Nord Arctic</span>
-                <span className="text-zinc-500">Frost & Slate</span>
+                <span className="text-cyan-400">solarized dark</span>
+                <span className="text-zinc-500">Deep Solarized</span>
+              </div>
+              <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
+                <span className="text-sky-400">colorblind-friendly dark</span>
+                <span className="text-zinc-500">Accessible Dark</span>
+              </div>
+              <div className="p-2.5 rounded border border-zinc-800 bg-zinc-900/50 flex items-center justify-between">
+                <span className="text-purple-400">tokyo night</span>
+                <span className="text-zinc-500">Cyan & Violet</span>
               </div>
             </div>
           </div>
 
           {/* How to Change */}
           <div className="space-y-2 pt-2">
-            <h2 className="text-base font-semibold text-white">3. Cara Mengubah Style & Tema</h2>
+            <h2 className="text-base font-semibold text-white">3. Cara Mengubah Color Scheme & Style</h2>
             <p className="text-zinc-400 text-xs">
-              Ketik perintah <code className="text-zinc-200">/style</code> atau <code className="text-zinc-200">/theme</code> di CLI untuk membuka wizard interaktif dengan live preview:
+              Ketik perintah <code className="text-zinc-200">/theme</code> atau <code className="text-zinc-200">/style</code> di CLI untuk membuka wizard selector 2-kolom dengan live diff preview:
             </p>
             <CodeBlock
               language="bash"
-              code="rts > /style"
+              code="rts > /theme"
             />
           </div>
         </section>
